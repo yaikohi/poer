@@ -1,6 +1,13 @@
-import { component$ } from "@builder.io/qwik";
+import { component$, useSignal } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
-import { LuBarChart2, LuHeart, LuRepeat, LuReply } from "@qwikest/icons/lucide";
+import {
+  LuBarChart2,
+  LuHeart,
+  LuLogOut,
+  LuRepeat,
+  LuReply,
+  LuSettings,
+} from "@qwikest/icons/lucide";
 import { PoeCreator } from "~/components/poe-creator/poe-creator";
 
 function getFormattedDate(date: Date) {
@@ -15,8 +22,18 @@ function getFormattedDate(date: Date) {
 //     numeric: "auto",
 //   }).format(new Date() - date, "minute");
 // }
+
+interface PoeProps {
+  user: {
+    username: string;
+    name: string;
+  };
+  content: string;
+  date: Date;
+}
+
 export default component$(() => {
-  const obj = {
+  const obj: PoeProps = {
     user: {
       name: "user",
       username: "username",
@@ -25,11 +42,24 @@ export default component$(() => {
     Necessitatibus inventore eos sunt veniam minima, laborum`,
     date: new Date(),
   };
+
+  const objects: PoeProps[] = [
+    { ...obj },
+    { ...obj },
+    { ...obj },
+    { ...obj },
+    { ...obj },
+    { ...obj },
+    { ...obj },
+    { ...obj },
+    { ...obj },
+  ];
   return (
     <>
       <div class="flex justify-between flex-row">
-        <div class="flex flex-row-reverse max-w-[200px] bg-blue-50 w-full">
-          {/* sidebar1 */}
+        <div class="flex relative place-items-end max-w-[200px] h-screen bg-blue-50 w-full">
+          {/* AVATAR MENU */}
+          <AvatarMenu />
         </div>
         <main class="max-w-lg border-border border-[1px]  w-full">
           {/* TABS */}
@@ -45,12 +75,9 @@ export default component$(() => {
           <PoeCreator />
           {/* CONTENT */}
           <div>
-            <Poe {...obj} />
-            <Poe {...obj} />
-            <Poe {...obj} />
-            <Poe {...obj} />
-            <Poe {...obj} />
-            <Poe {...obj} />
+            {objects.map((obj, idx) => {
+              return <Poe {...obj} key={idx} />;
+            })}
           </div>
         </main>
         <div class="flex bg-blue-50 max-w-[200px] w-full">{/* sidebar2 */}</div>
@@ -59,14 +86,45 @@ export default component$(() => {
   );
 });
 
-interface PoeProps {
-  user: {
-    username: string;
-    name: string;
-  };
-  content: string;
-  date: Date;
-}
+export const AvatarMenu = component$(() => {
+  const showMenu = useSignal(false);
+  return (
+    <div class="fixed max-w-[225px] w-full">
+      <div class="relative flex w-full m-2">
+        {/* ALWAYS VISIBLE */}
+        <button
+          onClick$={() => {
+            showMenu.value = !showMenu.value;
+            console.log(showMenu.value);
+          }}
+        >
+          <div class="aspect-square w-12 bg-primary rounded-full"></div>
+        </button>
+
+        {/* INVISIBLE, ON CLICK => VISIBLE */}
+        {showMenu.value && (
+          <div class="rounded-xl bg-background absolute bottom-12 max-w-[150px] w-full my-1">
+            <ul class="w-full flex flex-col">
+              <li class="rounded-t-xl p-2">
+                <a class="place-items-center flex gap-3  p-2 w-full " href="/">
+                  <LuLogOut />
+                  sign out
+                </a>
+              </li>
+              <li class=" rounded-b-xl p-2">
+                <a class="place-items-center flex gap-3 p-2 w-full " href="/">
+                  <LuSettings />
+                  settings
+                </a>
+              </li>
+            </ul>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+});
+
 export const Poe = component$<PoeProps>(({ date, user, content }) => {
   const { name, username } = user;
   return (
