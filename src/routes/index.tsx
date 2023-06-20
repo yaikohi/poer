@@ -1,13 +1,6 @@
-import { component$, useSignal } from "@builder.io/qwik";
+import { Slot, component$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
-import {
-  LuBarChart2,
-  LuHeart,
-  LuLogOut,
-  LuRepeat,
-  LuReply,
-  LuSettings,
-} from "@qwikest/icons/lucide";
+import { LuBarChart2, LuHeart, LuRepeat, LuReply } from "@qwikest/icons/lucide";
 import { PoeCreator } from "~/components/poe-creator/poe-creator";
 
 function getFormattedDate(date: Date) {
@@ -16,13 +9,6 @@ function getFormattedDate(date: Date) {
     dateStyle: "full",
   }).format(date);
 }
-/** WIP relative time calculator function lol */
-// function getRelativeTime(date: Date) {
-//   return new Intl.RelativeTimeFormat("en", {
-//     numeric: "auto",
-//   }).format(new Date() - date, "minute");
-// }
-
 interface PoeProps {
   user: {
     username: string;
@@ -33,6 +19,14 @@ interface PoeProps {
 }
 
 export default component$(() => {
+  return (
+    <>
+      <Feed />
+    </>
+  );
+});
+
+export const Feed = component$(() => {
   const obj: PoeProps = {
     user: {
       name: "user",
@@ -56,72 +50,37 @@ export default component$(() => {
   ];
   return (
     <>
-      <div class="flex justify-between flex-row">
-        <div class="flex relative place-items-end max-w-[200px] h-screen bg-blue-50 w-full">
-          {/* AVATAR MENU */}
-          <AvatarMenu />
-        </div>
-        <main class="max-w-lg border-border border-[1px]  w-full">
-          {/* TABS */}
-          <div class="flex w-full place-content-around">
-            <div class="px-3 py-2 p-2 m-1">
-              <button>following</button>
-            </div>
-            <div class="px-3 py-2 p-2 m-1">
-              <button>for you</button>
-            </div>
-          </div>
-          {/* TEXT FIELD */}
-          <PoeCreator />
-          {/* CONTENT */}
-          <div>
-            {objects.map((obj, idx) => {
-              return <Poe {...obj} key={idx} />;
-            })}
-          </div>
-        </main>
-        <div class="flex bg-blue-50 max-w-[200px] w-full">{/* sidebar2 */}</div>
+      <Tabs>
+        <Tab>following</Tab>
+        <Tab>for you</Tab>
+      </Tabs>
+      <PoeCreator />
+      <div class="flex flex-col max-w-max">
+        {objects.map((obj, idx) => {
+          return <Poe {...obj} key={idx} />;
+        })}
       </div>
     </>
   );
 });
 
-export const AvatarMenu = component$(() => {
-  const showMenu = useSignal(false);
+export const Tabs = component$(() => {
   return (
-    <div class="fixed max-w-[225px] w-full">
-      <div class="relative flex w-full m-2">
-        {/* ALWAYS VISIBLE */}
-        <button
-          onClick$={() => {
-            showMenu.value = !showMenu.value;
-            console.log(showMenu.value);
-          }}
-        >
-          <div class="aspect-square w-12 bg-primary rounded-full"></div>
-        </button>
-
-        {/* INVISIBLE, ON CLICK => VISIBLE */}
-        {showMenu.value && (
-          <div class="rounded-xl bg-background absolute bottom-12 max-w-[150px] w-full my-1">
-            <ul class="w-full flex flex-col">
-              <li class="rounded-t-xl p-2">
-                <a class="place-items-center flex gap-3  p-2 w-full " href="/">
-                  <LuLogOut />
-                  sign out
-                </a>
-              </li>
-              <li class=" rounded-b-xl p-2">
-                <a class="place-items-center flex gap-3 p-2 w-full " href="/">
-                  <LuSettings />
-                  settings
-                </a>
-              </li>
-            </ul>
-          </div>
-        )}
-      </div>
+    <div class="flex w-full place-content-around">
+      <Slot />
     </div>
+  );
+});
+
+export const Tab = component$(() => {
+  return (
+    <>
+      <div class="px-3 py-2 p-2 m-1">
+        <button>
+          <Slot />
+        </button>
+      </div>
+    </>
   );
 });
 
@@ -132,7 +91,7 @@ export const Poe = component$<PoeProps>(({ date, user, content }) => {
       <div class="mx-2 flex flex-row gap-2">
         <div class="aspect-square h-10 rounded-full bg-green-200"></div>
         <div class="flex flex-col">
-          <div class="flex place-items-center justify-between">
+          <div class="md:flex md:place-items-center md:justify-between">
             <div class="flex gap-1">
               <h3 class="font-bold">{name}</h3>
               <p class="font-light text-muted-foreground">@{username}</p>
@@ -166,11 +125,11 @@ export const Poe = component$<PoeProps>(({ date, user, content }) => {
   );
 });
 export const head: DocumentHead = {
-  title: "Welcome to Qwik",
+  title: "poer",
   meta: [
     {
       name: "description",
-      content: "Qwik site description",
+      content: "poer site description",
     },
   ],
 };

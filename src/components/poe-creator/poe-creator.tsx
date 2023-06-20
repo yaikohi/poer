@@ -13,7 +13,7 @@ export const PoeCreator = component$(() => {
     <div class="flex w-full  border-b-border border-b-[1px] gap-2 p-4">
       <div class="aspect-square h-10 bg-green-200 rounded-full"></div>
       <div class="flex w-full flex-col ">
-        <div class="u">
+        <div class="border-b-border border-b-[1px]">
           <label hidden={true} class="text-xs" for="poe">
             poe
           </label>
