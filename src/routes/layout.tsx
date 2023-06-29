@@ -3,6 +3,7 @@ import { type RequestHandler } from "@builder.io/qwik-city";
 import {
   LuBell,
   LuFlame,
+  LuGithub,
   LuHome,
   LuLogIn,
   LuLogOut,
@@ -10,6 +11,7 @@ import {
   LuSearch,
   LuSettings,
 } from "@qwikest/icons/lucide";
+import { Button } from "~/components/ui/button";
 
 export const onGet: RequestHandler = async ({ cacheControl }) => {
   // Control caching for this request for best performance and to reduce hosting costs:
@@ -26,11 +28,11 @@ export default component$(() => {
   return (
     <>
       <MainGrid>
-        <LeftSidebar />
-        <main class="max-w-[45rem] md:col-span-3  lg:col-start-2 min-w-[30rem] border-border border-[1px] w-full">
+        {/* <LeftSidebar /> */}
+        <main class="max-w-md min-w-md mx-auto border-border border-[1px] w-full">
           <Slot />
         </main>
-        <RightSidebar />
+        {/* <RightSidebar /> */}
       </MainGrid>
     </>
   );
@@ -38,8 +40,12 @@ export default component$(() => {
 
 export const MainGrid = component$(() => {
   return (
-    <div class="md:grid flex lg:grid-cols-3 md:grid-cols-5">
+    <div class="flex relative">
       <Slot />
+      <div class="fixed bottom-0 w-full h-[64px] px-4 rounded-t-xl bg-blue-200/10 backdrop-blur-md "></div>
+      <div class="fixed bottom-0 w-full h-[64px] px-4 rounded-t-xl flex place-items-center ">
+        <Button variant={"default"} class="place-items-center gap-2 flex"><LuGithub /> Login</Button>
+      </div>
     </div>
   );
 });
@@ -78,6 +84,7 @@ export const LeftSidebar = component$(() => {
           <AvatarMenu />
         </div>
       </aside>
+
     </div>
   );
 });
@@ -121,7 +128,7 @@ export const AvatarMenu = component$(() => {
 
 export const LoggedInMenuItems = component$(() => {
   return (
-    <div class="rounded-xl bg-background absolute bottom-12 max-w-[180px] right-24 w-full my-1">
+    <div class="rounded-xl bg-background absolute bottom-12 max-w-md right-24 w-full my-1">
       <ul class="w-full flex flex-col">
         <MenuItem>
           <LuLogOut class="w-12" />

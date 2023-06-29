@@ -49,18 +49,19 @@ export const Feed = component$(() => {
     { ...obj },
   ];
   return (
-    <>
+    <div class="relative h-screen">
       <Tabs>
         <Tab>following</Tab>
         <Tab>for you</Tab>
       </Tabs>
       <PoeCreator />
-      <div class="flex flex-col max-w-max">
+      <div class="flex flex-col">
         {objects.map((obj, idx) => {
           return <Poe {...obj} key={idx} />;
         })}
       </div>
-    </>
+      
+    </div>
   );
 });
 
@@ -104,7 +105,7 @@ export const Poe = component$<PoeProps>(({ date, user, content }) => {
               {getFormattedDate(date)}
             </time>
           </div>
-          <p>{content}</p>
+          <p class="text-base">{content}</p>
           <div class="flex gap-20 my-2">
             <button>
               <LuReply />
