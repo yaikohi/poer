@@ -10,9 +10,12 @@
  * - npm run build
  *
  */
-import { renderToStream, type RenderToStreamOptions } from '@builder.io/qwik/server';
-import { manifest } from '@qwik-client-manifest';
-import Root from './root';
+import {
+  renderToStream,
+  type RenderToStreamOptions,
+} from "@builder.io/qwik/server";
+import { manifest } from "@qwik-client-manifest";
+import Root from "./root";
 
 export default function (opts: RenderToStreamOptions) {
   return renderToStream(<Root />, {
@@ -20,8 +23,29 @@ export default function (opts: RenderToStreamOptions) {
     ...opts,
     // Use container attributes to set attributes on the html tag.
     containerAttributes: {
-      lang: 'en-us',
+      lang: "en-us",
       ...opts.containerAttributes,
     },
   });
+}
+
+/**
+ * @WARN - Removes the `Duplicate implementations of "JSXNode" found` warning messages from the console.
+ * These appear when using the @qwikest/icons package.
+ *
+ * Link to the issue on github: https://github.com/qwikest/icons/issues/11
+ * Source of the hacky temporary solution: https://github.com/BuilderIO/qwik/issues/3883#issuecomment-1575046705
+ */
+import { isDev } from "@builder.io/qwik/build";
+if (isDev) {
+  const SUPPRESSED_WARNINGS = ['Duplicate implementations of "JSXNode" found'];
+  console.warn = function filterWarnings(msg, ...args) {
+    if (
+      !SUPPRESSED_WARNINGS.some(
+        (entry) =>
+          msg.includes(entry) || args.some((arg) => arg.includes(entry))
+      )
+    )
+      console.warn(msg, ...args);
+  };
 }
